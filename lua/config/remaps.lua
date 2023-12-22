@@ -17,7 +17,7 @@ vim.keymap.set("n", "<leader>Y", "\"+Y")
 -- Rename all instances of highlighted word 
 vim.keymap.set("n", "<leader>s", [[:%s/\<<C-r><C-w>\>/<C-r><C-w>/gI<Left><Left><Left>]])
 
--- vim.keymap.set('n', "<Char-0xAA>", ":30Lexplore<CR>", { desc = 'Open file explorer', silent = true })
+vim.keymap.set('n', "<Char-0xAA>", ":30Lexplore<CR>", { desc = 'Open file explorer', silent = true })
 
 -- Toggle Term
 vim.keymap.set('n', '<leader>th', ':ToggleTerm direction=horizontal size=05<Enter>')

@@ -57,7 +57,7 @@ require("lazy").setup({
 
     'rebelot/kanagawa.nvim',
 
-    'nvim-tree/nvim-tree.lua',
+    -- 'nvim-tree/nvim-tree.lua',
     'nvim-tree/nvim-web-devicons',
 })
 
@@ -149,9 +149,9 @@ local function on_attach_nvim_tree(_, bufnr)
 
     api.config.mappings.default_on_attach(bufnr)
 
-    vim.keymap.set('n', "<Char-0xAA>", ":NvimTreeFocus<Enter>", opts('Open and focus NvimTree'))
+    vim.keymap.set('n', "<Char-0xAA>", ":NvimTreeToggle<CR>", opts('Open and focus NvimTree'))
 end
 
-require('nvim-tree').setup {
-    on_attach = on_attach_nvim_tree,
-}
+-- require('nvim-tree').setup {
+    -- on_attach = on_attach_nvim_tree,
+-- }
