@@ -41,7 +41,7 @@ require("lazy").setup({
         },
     },
 
-    'github/copilot.vim',
+    -- 'github/copilot.vim',
 
     'romainl/vim-cool',
     {
@@ -59,6 +59,28 @@ require("lazy").setup({
 
     -- 'nvim-tree/nvim-tree.lua',
     'nvim-tree/nvim-web-devicons',
+
+    {
+        'mrcjkb/haskell-tools.nvim',
+        lazy = false,
+        version = '^3', -- Recommended
+        ft = { 'haskell', 'lhaskell', 'cabal', 'cabalproject' },
+    },
+    'neovimhaskell/haskell-vim',
+    { 'echasnovski/mini.comment', version = false },
+    { 'echasnovski/mini.surround', version = false },
+
+    -- Autocompletion
+    {
+        'hrsh7th/nvim-cmp',
+        dependencies = {
+            'L3MON4D3/LuaSnip',
+            'saadparwaiz1/cmp_luasnip',
+
+            'hrsh7th/cmp-nvim-lsp',
+            'hrsh7th/cmp-path',
+        },
+    },
 })
 
 -- Colorscheme 
@@ -76,6 +98,10 @@ require('kanagawa').setup({
 })
 
 vim.cmd('colorscheme kanagawa-dragon')
+
+-- Mini Surround && Comment Config
+require('mini.surround').setup()
+require('mini.comment').setup()
 
 -- Mason LSP Config
 require('mason').setup()
@@ -129,15 +155,29 @@ mason_lspconfig.setup {
     ensure_installed = vim.tbl_keys(servers),
 }
 
+local capabilities = vim.lsp.protocol.make_client_capabilities()
+capabilities = require('cmp_nvim_lsp').default_capabilities(capabilities)
+
 mason_lspconfig.setup_handlers {
     function(server_name)
         require('lspconfig')[server_name].setup {
+            capabilities = capabilities,
             on_attach = on_attach_mason,
             settings = servers[server_name],
             filetypes = (servers[server_name] or {}).filetypes,
         }
     end,
 }
+
+-- Suppress warning: multiple different client offset_encodings detected for buffer, this is not supported yet
+local notify = vim.notify
+vim.notify = function(msg, ...)
+    if msg:find('warning: multiple different client offset_encodings') then
+        return
+    end
+
+    notify(msg, ...)
+end
 
 -- Nvim Tree Config 
 local function on_attach_nvim_tree(_, bufnr)
@@ -155,3 +195,54 @@ end
 -- require('nvim-tree').setup {
     -- on_attach = on_attach_nvim_tree,
 -- }
+
+-- Completion config
+
+local cmp = require 'cmp'
+local luasnip = require 'luasnip'
+require('luasnip.loaders.from_vscode').lazy_load()
+luasnip.config.setup {}
+
+cmp.setup {
+  snippet = {
+    expand = function(args)
+      luasnip.lsp_expand(args.body)
+    end,
+  },
+  preselect = 'none',
+  completion = {
+    completeopt = 'menu,menuone,noinsert,noselect',
+  },
+  mapping = cmp.mapping.preset.insert {
+    ['<C-n>'] = cmp.mapping.select_next_item(),
+    ['<C-p>'] = cmp.mapping.select_prev_item(),
+    ['<C-b>'] = cmp.mapping.scroll_docs(-4),
+    ['<C-f>'] = cmp.mapping.scroll_docs(4),
+    ['<C-Space>'] = cmp.mapping.complete {},
+    ['<CR>'] = cmp.mapping.confirm {
+      behavior = cmp.ConfirmBehavior.Replace,
+      select = true,
+    },
+    ['<Tab>'] = cmp.mapping(function(fallback)
+      if cmp.visible() then
+        cmp.select_next_item()
+      elseif luasnip.expand_or_locally_jumpable() then
+        luasnip.expand_or_jump()
+      else
+        fallback()
+      end
+    end, { 'i', 's' }),
+    ['<S-Tab>'] = cmp.mapping(function(fallback)
+      if cmp.visible() then
+        cmp.select_prev_item()
+      elseif luasnip.locally_jumpable(-1) then
+        luasnip.jump(-1)
+      else
+        fallback()
+      end
+    end, { 'i', 's' }),
+  },
+  sources = {
+    { name = 'nvim_lsp' },
+  },
+}

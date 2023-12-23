@@ -13,6 +13,17 @@ vim.opt.wrap = false
 
 vim.opt.signcolumn = "no"
 
+vim.o.ignorecase = true
+vim.o.smartcase = true
+
+vim.o.completeopt = "menuone,noselect"
+
+-- Disable mouse
+vim.opt.mouse = ""
+
+-- Disable space
+vim.keymap.set({ 'n', 'v' }, '<Space>', '<Nop>', { silent = true })
+
 vim.g.mapleader = " "
 
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
@@ -27,5 +38,7 @@ if not vim.loop.fs_stat(lazypath) then
     })
 end
 vim.opt.rtp:prepend(lazypath)
+
+vim.opt.rtp:append(vim.fn.stdpath("data") .. "/site")
 
 require('config')
