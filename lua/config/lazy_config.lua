@@ -41,7 +41,15 @@ require("lazy").setup({
         },
     },
 
-    -- 'github/copilot.vim',
+    -- {
+    --     'github/copilot.vim',
+    --     lazy = false,
+    --     config = function()
+    --         vim.g.copilot_no_tab_map = true;
+    --         vim.g.copilot_assume_mapped = true;
+    --         vim.g.copilot_tab_fallback = "";
+    --     end
+    -- },
 
     'romainl/vim-cool',
     {
@@ -81,6 +89,15 @@ require("lazy").setup({
             'hrsh7th/cmp-path',
         },
     },
+
+    'EdenEast/nightfox.nvim',
+    'JoosepAlviste/palenightfall.nvim',
+    'lewpoly/sherbet.nvim',
+
+    {
+        'olimorris/onedarkpro.nvim',
+        priority = 1000
+    }
 })
 
 -- Colorscheme 
@@ -98,6 +115,11 @@ require('kanagawa').setup({
 })
 
 vim.cmd('colorscheme kanagawa-dragon')
+-- vim.cmd('colorscheme duskfox')
+-- vim.cmd('colorscheme palenightfall')
+-- string = #ccb88f
+-- vim.cmd('colorscheme sherbet')
+-- vim.cmd('colorscheme onedark_dark')
 
 -- Mini Surround && Comment Config
 require('mini.surround').setup()
@@ -141,6 +163,7 @@ local on_attach_mason = function(_, bufnr)
     end
 
     nmap('K', vim.lsp.buf.hover, 'Hover Documentation')
+    nmap('<leader>rn', vim.lsp.buf.rename, '[R]e[n]ame')
     nmap('gd', require('telescope.builtin').lsp_definitions, '[G]oto [D]efinition')
 
 
@@ -232,17 +255,19 @@ cmp.setup {
         fallback()
       end
     end, { 'i', 's' }),
-    ['<S-Tab>'] = cmp.mapping(function(fallback)
-      if cmp.visible() then
-        cmp.select_prev_item()
-      elseif luasnip.locally_jumpable(-1) then
-        luasnip.jump(-1)
-      else
-        fallback()
-      end
-    end, { 'i', 's' }),
+    -- ['<S-Tab>'] = cmp.mapping(function(fallback)
+    --   if cmp.visible() then
+    --     cmp.select_prev_item()
+    --   elseif luasnip.locally_jumpable(-1) then
+    --     luasnip.jump(-1)
+    --   else
+    --     fallback()
+    --   end
+    -- end, { 'i', 's' }),
   },
   sources = {
     { name = 'nvim_lsp' },
   },
 }
+
+vim.api.nvim_set_keymap("i", "<S-Tab>", 'copilot#Accept("<CR>")', { silent = true, expr = true })

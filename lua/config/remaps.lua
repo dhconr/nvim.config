@@ -15,7 +15,7 @@ vim.keymap.set("v", "<leader>y", "\"+y")
 vim.keymap.set("n", "<leader>Y", "\"+Y")
 
 -- Rename all instances of highlighted word 
-vim.keymap.set("n", "<leader>s", [[:%s/\<<C-r><C-w>\>/<C-r><C-w>/gI<Left><Left><Left>]])
+-- vim.keymap.set("n", "<leader>s", [[:%s/\<<C-r><C-w>\>/<C-r><C-w>/gI<Left><Left><Left>]])
 
 vim.keymap.set('n', "<Char-0xAA>", ":30Lexplore<CR>", { desc = 'Open file explorer', silent = true })
 
@@ -38,3 +38,6 @@ vim.keymap.set('t', '<C-l>', [[<C-\><C-n><C-w>l]])
 
 -- Terminal mode keybinding to exit insert mode
 vim.keymap.set('t', '<C-\\>', [[<C-\><C-n>]])
+
+-- Github Copilot
+-- vim.api.nvim_set_keymap("i", "<S-Tab>", 'copilot#Accept("<CR>")', { silent = true, expr = true })
