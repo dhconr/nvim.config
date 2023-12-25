@@ -90,6 +90,7 @@ require("lazy").setup({
         },
     },
 
+    -- Color schemes
     'EdenEast/nightfox.nvim',
     'JoosepAlviste/palenightfall.nvim',
     'lewpoly/sherbet.nvim',
@@ -97,7 +98,13 @@ require("lazy").setup({
     {
         'olimorris/onedarkpro.nvim',
         priority = 1000
-    }
+    },
+
+    -- File tree
+    {
+        'nvim-telescope/telescope-file-browser.nvim',
+        dependencies = { 'nvim-telescope/telescope.nvim', 'nvim-lua/plenary.nvim' },
+    },
 })
 
 -- Colorscheme 

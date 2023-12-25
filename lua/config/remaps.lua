@@ -41,3 +41,8 @@ vim.keymap.set('t', '<C-\\>', [[<C-\><C-n>]])
 
 -- Github Copilot
 -- vim.api.nvim_set_keymap("i", "<S-Tab>", 'copilot#Accept("<CR>")', { silent = true, expr = true })
+
+-- File browser
+-- vim.api.nvim_set_keymap('n', '<leader>fb', ':Telescope file_browser<CR>', { noremap = true })
+vim.api.nvim_set_keymap('n', '<leader>fb', ':Telescope file_browser path=%:p:h select_buffer=true<CR><Esc>', { noremap = true })
+
