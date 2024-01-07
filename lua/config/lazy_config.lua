@@ -37,6 +37,7 @@ require("lazy").setup({
                 theme = 'iceberg_dark',
                 component_separators = "|",
                 section_separators = '',
+                globalstatus = true,
             },
         },
     },
@@ -75,8 +76,13 @@ require("lazy").setup({
         ft = { 'haskell', 'lhaskell', 'cabal', 'cabalproject' },
     },
     'neovimhaskell/haskell-vim',
+
+    -- Mini 
     { 'echasnovski/mini.comment', version = false },
     { 'echasnovski/mini.surround', version = false },
+    -- { 'echasnovski/mini.pairs', version = false },
+    { 'echasnovski/mini.cursorword', version = false },
+    { 'echasnovski/mini.splitjoin', version = false },
 
     -- Autocompletion
     {
@@ -105,11 +111,19 @@ require("lazy").setup({
         'nvim-telescope/telescope-file-browser.nvim',
         dependencies = { 'nvim-telescope/telescope.nvim', 'nvim-lua/plenary.nvim' },
     },
+
+    'jinh0/eyeliner.nvim',
+
+    'norcalli/nvim-colorizer.lua',
+
+    -- 'chentoast/marks.nvim',
+
+    'joerdav/templ.vim',
 })
 
 -- Colorscheme 
 require('kanagawa').setup({
-    transparent = false,
+    transparent = true,
     colors = {
         theme = {
             all = {
@@ -128,9 +142,12 @@ vim.cmd('colorscheme kanagawa-dragon')
 -- vim.cmd('colorscheme sherbet')
 -- vim.cmd('colorscheme onedark_dark')
 
--- Mini Surround && Comment Config
+-- Mini configs
 require('mini.surround').setup()
 require('mini.comment').setup()
+-- require('mini.pairs').setup()
+require('mini.cursorword').setup()
+require('mini.splitjoin').setup()
 
 -- Mason LSP Config
 require('mason').setup()
@@ -262,19 +279,37 @@ cmp.setup {
         fallback()
       end
     end, { 'i', 's' }),
-    -- ['<S-Tab>'] = cmp.mapping(function(fallback)
-    --   if cmp.visible() then
-    --     cmp.select_prev_item()
-    --   elseif luasnip.locally_jumpable(-1) then
-    --     luasnip.jump(-1)
-    --   else
-    --     fallback()
-    --   end
-    -- end, { 'i', 's' }),
+    ['<S-Tab>'] = cmp.mapping(function(fallback)
+      if cmp.visible() then
+        cmp.select_prev_item()
+      elseif luasnip.locally_jumpable(-1) then
+        luasnip.jump(-1)
+      else
+        fallback()
+      end
+    end, { 'i', 's' }),
   },
   sources = {
     { name = 'nvim_lsp' },
   },
 }
 
-vim.api.nvim_set_keymap("i", "<S-Tab>", 'copilot#Accept("<CR>")', { silent = true, expr = true })
+-- vim.api.nvim_set_keymap("i", "<S-Tab>", 'copilot#Accept("<CR>")', { silent = true, expr = true })
+
+-- Eyeliner
+require('eyeliner').setup {
+    highlight_on_key = true,
+}
+
+vim.api.nvim_set_hl(0, 'EyelinerPrimary', { bold = true, underline = true })
+vim.api.nvim_set_hl(0, 'EyelinerSecondary', { underline = true })
+
+-- Marks
+-- require('marks').setup()
+
+-- Templ
+vim.filetype.add({
+    extension = {
+        templ = "templ",
+    },
+})
